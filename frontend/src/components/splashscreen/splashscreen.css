@@ -1,0 +1,120 @@
+.splashscreen {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 2;
+    background-color: white;
+    display: flex;
+}
+
+
+.splashscreen > .hero {
+    position: absolute;
+    right: -600px;
+    top: -350px;
+    width: 1800px;
+    height: 1200px;
+    z-index: 3;
+    transform: rotate(25deg);
+}
+
+.splashscreen > .content-container {
+    
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 4;
+    display: flex;
+}
+
+.splashscreen > .content-container > .content {
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    padding-top: 150px;
+    color: black;
+    z-index: 10;
+
+    font-family: "Montserrat", sans-serif;
+}
+
+.splashscreen > .content-container > .content > .title {
+    font-size: 80px;
+    padding-top: 20px;
+}
+
+.splashscreen > .content-container > .content > .title > .title1 {
+    padding-top: 20px;
+    /* font-family: "Montserrat", sans-serif; */
+    font-weight: 600;
+    /* font-size: 80px; */
+}
+
+.splashscreen > .content-container > .content > .title > .title2 {
+    padding-top: 20px;
+    /* font-family: "Montserrat", sans-serif; */
+    font-weight: 100;
+    font-style: italic;
+    /* font-size: 80px; */
+}
+
+.splashscreen > .content-container > .content > .subtitle {
+    padding-left: 5px;
+    /* font-family: "Montserrat", sans-serif; */
+    font-weight: 400;
+    font-size: 40px;
+}
+
+.splashscreen > .content-container > .content > .description {
+    padding-left: 10px;
+    font-weight: 400;
+    font-size: 16px;
+    width: 600px
+}
+
+.splashscreen > .content-container > .content > .enter-the-explorer {
+    margin-top: 40px;
+    padding: 10px;
+    background-color: #E3E3E3;
+    color: #404040;
+    width: 300px;
+    text-align: center;
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.splashscreen > .content-container > .content > .enter-the-explorer:hover {
+    background-color: #b7b7b7;
+    cursor: pointer;
+}
+
+.splashscreen > .content-container > .content > .logo-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 80px;
+}
+
+.splashscreen > .content-container > .content > .logo-footer > img {
+    width: 300px;
+    height: 90px;
+    padding: 0px 20px;
+}
+
+.splashscreen > .content-container > .content > .logo-footer > .ucsd {
+    width: 700px;
+    height: 90px
+}
+
+
+
+
+.splashscreen > .content-container > .content > .seal-spiral {
+    width: 200px;
+    height: 200px;
+    border-radius: 1000px;
+}

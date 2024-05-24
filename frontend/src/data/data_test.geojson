@@ -1,0 +1,367 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -81.861739,
+                    32.029291
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Interactive data browser",
+                "Geo Description": "United States",
+                "Topic": "Wildfire Resilience",
+                "Authors": [
+                    "Isaac Nealey",
+                    "Ilkay Altintas",
+                    "Dan Crawl",
+                    "WIFIRE Lab"
+                ],
+                "Institutions": [
+                    "San Diego Supercomputer Center",
+                    "UC San Diego"
+                ],
+                "Title": "Points2Pano"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -117.235726,
+                    32.881569
+                ]
+            },
+            "properties": {
+                "shp file": "test_sites.geojson",
+                "Tags": "Interactive data browser",
+                "Geo Description": "UC San Diego",
+                "Topic": "Wildfire Resilience",
+                "Authors": [
+                    "Isaac Nealey",
+                    "Ilkay Altintas",
+                    "Dan Crawl",
+                    "WIFIRE Lab"
+                ],
+                "Institutions": [
+                    "San Diego Supercomputer Center",
+                    "UC San Diego"
+                ],
+                "Title": "BurnPro3D"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -117.235726,
+                    32.881569
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Demo",
+                "Geo Description": "UC San Diego",
+                "Topic": "Wildfire Resilience",
+                "Authors": "WIFIRE Lab",
+                "Institutions": [
+                    "San Diego Supercomputer Center",
+                    "UC San Diego"
+                ],
+                "Title": "BurnPro3D Demo"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -117.235726,
+                    32.881569
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Illustrative animation",
+                "Geo Description": "UC San Diego",
+                "Publication": null,
+                "Topic": "Wildfire Resilience",
+                "Authors": [
+                    "Benjamin Tran",
+                    "Lily Hu",
+                    "Goldie Chu",
+                    "Melissa Floca",
+                    "Keith Lim",
+                    "Rukmini Ravi",
+                    "Charles Erwin"
+                ],
+                "Institutions": [
+                    "San Diego Supercomputer Center",
+                    "WIFIRE Lab",
+                    "UC San Diego"
+                ],
+                "Title": "Who’s a good fire?"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -83.047059,
+                    26.771414
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Interactive data browser",
+                "Geo Description": "Global Mangrove Extent (esp. Mexico, Hawaii, SE Asia)",
+                "Topic": "Coastal Resilience",
+                "Authors": [
+                    "Chris Lowrie",
+                    "Jessica Kendall-Bar",
+                    "Will Gislason"
+                ],
+                "Institutions": [
+                    "UC Santa Cruz",
+                    "Center for Coastal Climate Resilience"
+                ],
+                "Title": "Coastal Resilience Explorer"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -122.412327,
+                    36.757318
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Interactive data browser",
+                "Geo Description": "Monterey Bay",
+                "Publication": null,
+                "Topic": "Life in the Deep",
+                "Authors": [
+                    "Chris Lowrie",
+                    "Jessica Kendall-Bar",
+                    "Will Gislason"
+                ],
+                "Institutions": [
+                    "Scripps Institution of Oceanography",
+                    "UC San Diego",
+                    "UC Santa Cruz",
+                    "San Diego Supercomputer Center"
+                ],
+                "Title": "Life in the Deep Explorer"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -170,
+                    0
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Latitude": null,
+                "Geo Description": "Pacific Ocean",
+                "Topic": "Heat in our Oceans",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "Scripps Institution of Oceanography",
+                    "UC San Diego"
+                ],
+                "Title": "How much is the ocean heating up?"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -121.944903,
+                    36.641663
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "Monterey Bay",
+                "Topic": "Life in the Deep",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "Stanford University",
+                    "UC Santa Cruz"
+                ],
+                "Title": "Listen to the Heart Rate of a Blue Whale"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    165.464677,
+                    -77.701474
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "McMurdo Station, Antarctica",
+                "Topic": "Life in the Deep",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "Scripps Institution of Oceanography",
+                    "UC San Diego"
+                ],
+                "Title": "Follow the dive of an emperor penguin"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -122.045729,
+                    36.946915
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "4 Locations: North Pacific, Monterey Bay, Stellwagen Bank, Greenland",
+                "Topic": "Life in the Deep",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "UC Santa Cruz",
+                    "Scripps Institution of Oceanography",
+                    "UC San Diego"
+                ],
+                "Title": "Visualizing Life in the Deep: A Creative Pipeline for Data-Driven Animations to Facilitate Marine Mammal Research, Outreach, and Conservation"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -155.682548,
+                    20.08649
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "U.S. Reefs (US Virgin Islands, CNMI, Guam, Puerto Rico, Hawaii, Florida)",
+                "Topic": "Coastal Resilience",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "UC Santa Cruz",
+                    "Center for Coastal Climate Resilience"
+                ],
+                "Title": "Value of US Reefs for Flood Risk Reduction"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -170,
+                    -60
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "Southern Ocean",
+                "Topic": "Heat in our Oceans",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "Scripps Institution of Oceanography",
+                    "UC San Diego"
+                ],
+                "Title": "Heat in the Deep: using Argo to track the heat added to the Southern Ocean"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -141.971688,
+                    45.746966
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "North Pacific",
+                "Topic": "Life in the Deep",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": "UC Santa Cruz",
+                "Title": "Skinny seals sacrifice safety for sustenance"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -122.0909,
+                    36.760941
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "North Pacific",
+                "Topic": "Life in the Deep",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "Scripps Institution of Oceanography",
+                    "UC San Diego",
+                    "UC Santa Cruz"
+                ],
+                "Title": "Study Reveals Sleeping Habits of Elephant Seals at Sea"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -122.0909,
+                    36.760941
+                ]
+            },
+            "properties": {
+                "shp file": [],
+                "Tags": "Data-driven animation",
+                "Geo Description": "Monterey Bay",
+                "Topic": "Life in the Deep",
+                "Authors": "Jessica Kendall-Bar",
+                "Institutions": [
+                    "Scripps Institution of Oceanography",
+                    "UC San Diego",
+                    "UC Santa Cruz"
+                ],
+                "Title": "Elephant seals drift off to sleep while diving far below the ocean surface"
+            },
+            "type": "Feature"
+        }
+    ]
+}

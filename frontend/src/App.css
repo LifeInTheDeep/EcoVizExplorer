@@ -1,0 +1,81 @@
+.App {
+  text-align: center;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: "Montserrat", sans-serif;
+}
+
+.canvas-container {
+  display: grid
+}
+
+.map-container {
+  height: 100vh;
+  width: 70vw;
+  cursor: all-scroll !important;
+}
+
+.map-container,
+#canvasID {
+  grid-area: 1/1
+}
+
+#canvasID {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.callout-container {
+  position: relative;
+  z-index: 0;
+  /* left: 10px;
+  top: -80px;
+  background-color: red;
+  z-index: 100;
+  width: 100px */
+}
+
+
+.callout {
+  border-radius: 20px;
+  background-color: grey;
+  color: white;
+  padding: 10px;
+  text-align:center;
+  text-justify: inter-word;
+  border: 1px solid white;
+  cursor: pointer;
+  /* pointer-events: none */
+  pointer-events:initial !important
+  /* touch-action: none */
+
+}
+
+.callout:hover {
+  background-color: antiquewhite;
+  color: black
+}
+
+/* Slide Map */
+.map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.screen {
+  display: flex;
+}
+
+@keyframes expandWidth {
+  from {
+    width: 0px;
+  }
+
+  to {
+    width: 300px;
+  }
+}

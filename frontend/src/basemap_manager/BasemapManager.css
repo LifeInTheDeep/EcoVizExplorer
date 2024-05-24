@@ -1,0 +1,72 @@
+.basemap-manager-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 4;
+  right: 10px;
+  bottom: 20px;
+  color: white;
+}
+
+.basemap-manager-container.light {
+  color: black;
+}
+
+.basemap-manager-header {
+  display: flex;
+  justify-content: center;
+  padding: 2px 2px 0px;
+  margin: 2px 5px;
+}
+
+.circle-selector-outer-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.circle-selector-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: 5px;
+}
+
+.circle-selector-text {
+  font-size: 0.8em;
+}
+
+.circle-selector {
+  width: 40px;
+  height: 40px;
+  margin: 2px;
+  border-radius: 100px;
+  background-color: rgba(193, 241, 253, 0.9);
+  border: 5px solid rgba(60, 132, 150, 0.8);
+  background-color: black;
+  cursor: pointer;
+}
+
+.circle-selector.selected {
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 0 0 2pt #d66e57;
+}
+
+.circle-selector.light {
+  background-image: url("assets/light-img.png");
+  background-position: center;
+  background-size: 60px 60px;
+}
+
+.circle-selector.dark {
+  background-image: url("assets/dark-img.png");
+  background-position: center;
+  background-size: 60px 60px;
+}
+
+.circle-selector.satellite {
+  background-image: url("assets/satellite-img.png");
+  background-position: center;
+  background-size: 60px 60px;
+}

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    ports:
+      - "3000:5173"
+    depends_on:
+      - backend
+    volumes:
+      - $PWD/frontend/src:/app/src
+    env_file:
+      # - .remote.env
+      - .local.env
+  
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "3001:8080"
+    volumes:
+      - $PWD/server:/app
+    env_file:
+      - .local.env
+
+
+# docker compose build --build-arg VITE_APP_BACKEND_URL=$VITE_APP_BACKEND_URL --build-arg VITE_APP_DATABASE_ID=$VITE_APP_DATABASE_ID && docker compose up

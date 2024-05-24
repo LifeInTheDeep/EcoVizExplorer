@@ -1,0 +1,35 @@
+.classyList > .category > .content > .item {
+    padding: 5px 10px;
+    border-bottom: 0.2px solid grey;
+}
+
+.classyList > .category > .header {
+    padding: 5px 10px;
+    font-weight: 500;
+    font-size: 1.2em;
+    padding-bottom: 10px;
+    padding-top: 15px;
+    display: flex;
+}
+
+
+.classyList > .category > .header > .icon-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10px
+    /* width: 10px */
+}
+
+.classyList > .category > .header > .icon-container > .icon {
+    width: 8px;
+    height: 8px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.classyList > .category > .content > .item:hover {
+    background-color: antiquewhite;
+    color: black;
+    cursor: pointer
+}
