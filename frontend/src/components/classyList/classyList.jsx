@@ -87,7 +87,7 @@ function ItemPreview({ item, onClick, itemClass, display_property }) {
           <div className="item-preview-container">
             <p className="item-preview-tag">{item.properties.Tags}</p>
             <button className="item-preview-button" onClick={onClick}>
-              View details
+              Read more
             </button>
           </div>
         </div>
