@@ -2,6 +2,7 @@ import './dataView.css'
 
 function FormatVideo(url) {
     if (!url.includes('youtu.be')) return <div className="video site">
+        <div><a href={url} target="_blank">Link to Site</a></div>
         <iframe width="100%" height="100%"
             src={url}>
         </iframe>
@@ -9,8 +10,9 @@ function FormatVideo(url) {
     const urlFormat = (u) => u.replace('https://youtu.be/', '').split('?')[0]
 
     return <div className="video">
+        <div><a href={url} target="_blank">Link to Site</a></div>
         <iframe width="100%" height="100%"
-            src={`https://www.youtube.com/embed/${urlFormat(url)}`}>
+            src={url}>
         </iframe>
     </div>
 }
