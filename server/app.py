@@ -16,7 +16,6 @@ app.add_middleware(
 
 @app.post('/v1/databases/{database_id}/query')
 def test(database_id: str):
-    print(os.getenv("NOTION_API_KEY"))
     x = requests.post(
         f"https://api.notion.com/v1/databases/{database_id}/query",
         headers={
