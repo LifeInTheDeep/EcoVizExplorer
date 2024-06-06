@@ -261,16 +261,28 @@ export default function Map() {
   // Initial Spin
   useEffect(() => {
     if (!mapLoaded || data) return;
-    initialSpinTimeout.current = setInterval(() => {
-      const { lng, lat } = map.getCenter();
-      map.flyTo({
-        center: [lng + 0.04, lat],
-        essential: true,
-        zoom: 2,
-      });
-    }, 5);
-    map.on("mousedown", () => clearInterval(initialSpinTimeout.current));
+    setTimeout(() => {
+      initialSpinTimeout.current = setInterval(() => {
+        const { lng, lat } = map.getCenter();
+        map.flyTo({
+          center: [lng + 0.04, lat],
+          essential: true,
+        });
+      }, 5);
+      map.on("mousedown", () => clearInterval(initialSpinTimeout.current));  
+    }, 500);
   }, [map, mapLoaded, data]);
+
+  // Zoom out
+  useEffect(() => {
+    if (!mapLoaded || data) return;
+    const { lng, lat } = map.getCenter();
+    map.flyTo({
+      center: [lng, lat],
+      zoom: 2,
+    });
+    
+  }, [data]);
 
   const header = data ? (
     <div className="header" onClick={() => setData()}>
