@@ -32,6 +32,7 @@ export default function DataView({ data, classes = [] }) {
   return (
     <div className={"data-view " + classes.join(" ")}>
       <div className="title">{data.Title}</div>
+      <div className="subtitle">{data["Short description"]}</div>
       <Block
         className="authors"
         title="Authors"
@@ -46,7 +47,11 @@ export default function DataView({ data, classes = [] }) {
       <Block
         className="type"
         title="Type"
-        content={<div className="content">{data.Tags}</div>}
+        content={
+          <div className="content">
+            <div>{data.Tags}</div>
+          </div>
+        }
       />
       <Block
         className="institutions"
@@ -65,14 +70,24 @@ export default function DataView({ data, classes = [] }) {
           title="Publication"
           content={
             <div>
-              <a href={data.Publication} target="_blank">
+              <a
+                className="button-link"
+                href={data.Publication}
+                target="_blank"
+              >
                 {data.Publication}
               </a>
             </div>
           }
         />
       )}
-      {data.URL && <a href={data.URL} className="button-link" target="_blank">View site</a>}
+      {data.URL && (
+        <div className="button-link">
+        <a  href={data.URL} target="_blank">
+          View site
+          </a>
+        </div>
+      )}
     </div>
   );
 }

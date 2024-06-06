@@ -1,13 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 // Custom Hooks
 import { useMap } from "./hooks/useMap";
 import "./App.css";
 import { init_viewport } from "./data/startup_data";
 
-import ClassyList, {
-  CategoricalClassyList,
-} from "./components/classyList/classyList";
+import { CategoricalClassyList } from "./components/classyList/classyList";
 import Menu from "./components/menu/menu";
 import DataView, { DetailDemo } from "./components/dataView/dataView";
 
@@ -95,17 +93,18 @@ function CreateGeojsonFromResponse(data) {
 }
 
 export default function Map() {
-  const { map, mapContainer, mapLoaded, viewport, flyToViewport, flyToBounds } =
-    useMap(init_viewport, token, "mapbox://styles/mapbox/light-v11");
+  const { map, mapContainer, mapLoaded } = useMap(
+    init_viewport,
+    token,
+    "mapbox://styles/mapbox/light-v11"
+  );
 
   const [features, setFeatures] = useState([]);
   const [data, setData] = useState();
-  const [video, setVideo] = useState();
   const [callouts, setCallouts] = useState([]);
   const canvasRef = useRef();
 
   const BL_Callout = useRef();
-  const TR_Callout = useRef();
 
   const initialSpinTimeout = useRef();
 
@@ -113,14 +112,66 @@ export default function Map() {
     x: 20,
     y: 50,
   };
+  const onMapMoveRef = useRef();
+  const getFeatures = useCallback(() => {
+    const width = map.getCanvas().clientWidth;
+    const height = map.getCanvas().clientHeight;
+
+    const center = { x: width / 2, y: height / 2 };
+    return map?.queryRenderedFeatures({ layers: ["data"] }).map((f) => {
+      try {
+        f["pos"] = map.project([f.properties.Longitude, f.properties.Latitude]);
+      } catch {
+        console.log("ERROR");
+        console.log(f);
+        f["pos"] = { x: 1000000, y: 1000000 };
+      }
+      f["distance_to_corners"] = Object();
+      f["distance_to_corners"].bottom_left = height - f["pos"].y + f["pos"].x;
+      f["distance_to_corners"].top_right = f["pos"].y + width - f["pos"].x;
+      f["distance_to_center"] = Math.sqrt(
+        Math.pow(f["pos"].y - center.y, 2) + Math.pow(f["pos"].x - center.x, 2)
+      );
+      return f;
+    });
+  }, [map]);
+
+  useEffect(() => {
+    onMapMoveRef.current = () => {
+      if (!map) return;
+      const features = getFeatures();
+
+      if (features.length < 2) {
+        setCallouts([]);
+        const ctx = canvasRef.current.getContext("2d");
+        const width = map.getCanvas().clientWidth;
+        const height = map.getCanvas().clientHeight;
+        ctx.clearRect(0, 0, width, height);
+        return;
+      }
+
+      const f1 = data
+        ? features.find((f) => f.properties.Title === data.Title)
+        : features.sort(
+            (a, b) => a.distance_to_center - b.distance_to_center
+          )[0];
+
+      const _callouts = [
+        {
+          loc: "bottom_left",
+          data: f1,
+          ref: BL_Callout,
+        },
+      ];
+      setCallouts(_callouts);
+    };
+  }, [map, data, features]);
 
   function AddData(map) {
     const URL = `${import.meta.env.VITE_APP_BACKEND_URL}/v1/databases/${
       import.meta.env.VITE_APP_DATABASE_ID
     }/query`;
-    fetch(URL, {
-      method: "POST",
-    })
+    fetch(URL, { method: "POST" })
       .then((r) => r.json())
       .then((r) => {
         const features = CreateGeojsonFromResponse(r.results);
@@ -144,92 +195,12 @@ export default function Map() {
           setData(JSON_Parse(e.features[0].properties))
         );
         map.on("move", () => {
-          let width = map.getCanvas().clientWidth;
-          let height = map.getCanvas().clientHeight;
-
-          let center = {
-            x: width / 2,
-            y: height / 2,
-          };
-
-          let features = map
-            .queryRenderedFeatures({ layers: ["data"] })
-            .map((f) => {
-              try {
-                f["pos"] = map.project([
-                  f.properties.Longitude,
-                  f.properties.Latitude,
-                ]);
-              } catch {
-                console.log("ERROR");
-                console.log(f);
-                f["pos"] = { x: 1000000, y: 1000000 };
-              }
-              f["distance_to_corners"] = Object();
-              f["distance_to_corners"].bottom_left =
-                height - f["pos"].y + f["pos"].x;
-              f["distance_to_corners"].top_right =
-                f["pos"].y + width - f["pos"].x;
-              f["distance_to_center"] = Math.sqrt(
-                Math.pow(f["pos"].y - center.y, 2) +
-                  Math.pow(f["pos"].x - center.x, 2)
-              );
-              return f;
-            });
-
-          if (features.length < 2) {
-            setCallouts([]);
-            const ctx = canvasRef.current.getContext("2d");
-            let width = map.getCanvas().clientWidth;
-            let height = map.getCanvas().clientHeight;
-            ctx.clearRect(0, 0, width, height);
-            return;
+          if (onMapMoveRef.current) {
+            onMapMoveRef.current();
           }
-
-          // const f1 = features.sort(function (a, b) {
-          //   return a.distance_to_corners.bottom_left - b.distance_to_corners.bottom_left;
-          // })[0]
-
-          // const f2 = features.sort(function (a, b) {
-          //   return a.distance_to_corners.top_right - b.distance_to_corners.top_right;
-          // })[0]
-
-          const f1 = features.sort(function (a, b) {
-            return a.distance_to_center - b.distance_to_center;
-          })[0];
-
-          const _callouts = [
-            {
-              loc: "bottom_left",
-              data: f1,
-              ref: BL_Callout,
-            },
-            // {
-            //   loc: "top_right",
-            //   data: f2,
-            //   ref: TR_Callout
-            // },
-          ];
-          setCallouts(_callouts);
         });
       });
   }
-
-  useEffect(() => {
-    if (!map) return;
-    map.on("load", () => {
-      AddData(map);
-    });
-    map.on("style.load", () => {
-      map.setFog({
-        color: "rgb(186, 210, 235)", // Lower atmosphere
-        "high-color": "rgb(36, 92, 223)", // Upper atmosphere
-        "horizon-blend": 0.02, // Atmosphere thickness (default 0.2 at low zooms)
-        "space-color": "rgb(11, 11, 25)", // Background color
-        "star-intensity": 0.6, // Background star brightness (default 0.35 at low zoooms )
-      });
-    });
-  }, [map]);
 
   useEffect(() => {
     if (!map) return;
@@ -268,25 +239,19 @@ export default function Map() {
     }
 
     const bl = callouts.filter((c) => c.loc === "bottom_left")[0];
-    // const tr = callouts.filter(c => c.loc === "top_right")[0]
+
     drawLine(
       bl.data.pos.x,
       bl.data.pos.y,
       bl.data.pos.x - callout_offsets.x,
       bl.data.pos.y + callout_offsets.y
     );
-    // drawLine(
-    //   tr.data.pos.x,
-    //   tr.data.pos.y,
-    //   tr.data.pos.x + callout_offsets.x,
-    //   tr.data.pos.y - callout_offsets.y,
-    // )
   }, [callouts]);
 
   useEffect(() => {
     if (!data) return;
     map.flyTo({
-      center: [data.Longitude, data.Latitude + 4],
+      center: [data.Longitude, data.Latitude + 10],
       essential: true,
       zoom: 4,
     });
@@ -295,13 +260,17 @@ export default function Map() {
 
   // Initial Spin
   useEffect(() => {
-    if (!mapLoaded) return;
+    if (!mapLoaded || data) return;
     initialSpinTimeout.current = setInterval(() => {
       const { lng, lat } = map.getCenter();
-      map.flyTo({ center: [lng + 0.04, lat], essential: true });
+      map.flyTo({
+        center: [lng + 0.04, lat],
+        essential: true,
+        zoom: 2,
+      });
     }, 5);
     map.on("mousedown", () => clearInterval(initialSpinTimeout.current));
-  }, [map, mapLoaded]);
+  }, [map, mapLoaded, data]);
 
   const header = data ? (
     <div className="header" onClick={() => setData()}>
