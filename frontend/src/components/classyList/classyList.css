@@ -1,12 +1,16 @@
 .classyList > .category > .content > .item {
-    padding: 5px 10px;
     border-bottom: 0.2px solid grey;
+}
+
+.classyList > .category > .content > .item > p {
+    padding: 10px 10px;
+    margin: 0;
 }
 
 .classyList > .category > .header {
     padding: 5px 10px;
     font-weight: 500;
-    font-size: 1.2em;
+    font-size: 1.1em;
     padding-bottom: 10px;
     padding-top: 15px;
     display: flex;
@@ -28,8 +32,99 @@
     border-radius: 10px;
 }
 
-.classyList > .category > .content > .item:hover {
-    background-color: antiquewhite;
-    color: black;
-    cursor: pointer
+.classyList > .category > .header > .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.category-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    margin-bottom: 4px;
+}
+
+.classyList > .category > .content > .item {
+    font-size: 0.82em;
+    overflow: hidden;
+}
+
+.classyList > .category > .content > .item > .item-preview {
+    height: 0;
+    transition: height 0.5s ease-in-out 0.2s;
+}
+
+.classyList > .category > .content > .item:hover > .item-preview {
+    height: 240px;
+}
+
+.classyList > .category > .content > .item > .item-preview > .item-preview-background {
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+}
+
+.item-preview-background > .item-preview-container {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-end;
+    align-self: flex-end;
+    padding: 10px;
+    position: relative;
+    z-index: 1;
+    align-items: flex-end;   
+}
+
+.item-preview-background > .item-preview-container > .item-preview-tag {
+    color: white;
+    text-transform: uppercase;
+    margin: 0 0 4px 0;
+}
+
+.item-preview-background > .item-preview-container > .item-preview-button {
+    background-color: transparent;
+    border: 2px solid white;
+    padding: 10px 16px;
+    border-radius: 36px;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+}
+
+.item-preview-background > .item-preview-container > .item-preview-button:hover {
+    background-color: Azure;
+    border: 2px solid Azure;
+    color: black;
+}
+
+.item-preview-background > .item-preview-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.chevron {
+    width: 1px;
+    height: 1px;
+    border: solid black;
+    border-width: 0 1.5px 1.5px 0;
+    display: inline-block;
+    padding: 3px;
+    margin-right: 12px;
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease 0.2s;
+}
+
+.classyList > .category > .content > .item:hover > p > .chevron {
+    transform: rotate(45deg);
+}
+

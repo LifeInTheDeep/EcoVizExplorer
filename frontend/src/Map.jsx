@@ -28,7 +28,6 @@ function JSON_Parse(obj) {
 }
 
 function CreateGeojsonFromResponse(data) {
-
   const getText = (f) => {
     if (Object.keys(f).includes('plain_text')) {
       return f.plain_text
@@ -38,6 +37,9 @@ function CreateGeojsonFromResponse(data) {
     }
     if (Object.keys(f).includes('url')) {
       return f.url
+    }
+    if (Object.keys(f).includes('file')) {
+      return f.file.url
     }
     if (Object.keys(f).includes('name')) {
       return f.name
@@ -117,10 +119,7 @@ export default function Map() {
     })
       .then(r => r.json())
       .then(r => {
-        console.log(r)
-
         const features = CreateGeojsonFromResponse(r.results)
-
         const geojson = {
           type: "FeatureCollection",
           features: features
@@ -275,9 +274,6 @@ export default function Map() {
 
   useEffect(() => {
     if (!data) return
-    console.log(data)
-    console.log({ center: [data.Longitude, data.Latitude] })
-    console.log(map)
     map.flyTo(
       {
         center: [data.Longitude, data.Latitude],
