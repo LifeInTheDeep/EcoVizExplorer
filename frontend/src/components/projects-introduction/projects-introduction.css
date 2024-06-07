@@ -1,0 +1,183 @@
+.projects-intro-container {
+  position: absolute;
+  top: 3%;
+  height: 90%;
+  z-index: 7;
+  border-radius: 24px;
+  border-width: 4px;
+  background-color: white;
+  padding: 8px;
+  padding-left: 6px;
+  left: 5%;
+  right: 5%;
+  border-color: var(--border-coral);
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    padding: 16px;
+    left: 7%;
+    right: 7%;
+  }
+}
+
+.projects-scroll-container {
+  overflow: scroll;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  
+  margin-top: 100px;
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.splash-screen-projects-intro {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.splash-screen-fade {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+}
+
+.projects-intro-title {
+  font-size: 1.3em;
+  text-align: left;
+}
+
+.projects-intro-body {
+  text-align: left;
+}
+
+.projects-intro-close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.close-x {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.projects-intro-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.projects-intro-content > div {
+  width: 100%;
+}
+
+.projects-scroll-container > h2 {
+  font-size: 2.2em;
+  font-weight: 300;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.projects-scroll-container > p {
+  font-size: 1.1em;
+  font-weight: 400;
+  margin-right: 40%;
+  margin-top: 0;
+}
+
+.projects-scroll-container > .title {
+  font-size: 2.3em;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.projects-scroll-container > .title > .title1 {
+  padding-top: 20px;
+  font-weight: 600;
+}
+
+.projects-scroll-container > .title > .title2 {
+  padding-top: 20px;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.projects-scroll-container > .title > .subtitle {
+  display: inline-block;
+  margin-left: 16px;
+  font-weight: 400;
+}
+
+
+.project-intro-thumbnail-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.project-intro-thumbnail {
+  width: 90%;
+  text-align: left;
+  height: 160px;
+  background-size: cover;
+  border-radius: 32px;
+}
+
+.project-intro-logo {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  bottom: 4px;
+  left: 20px;
+}
+
+.project-intro-text-container {
+  padding: 0 8px;
+}
+
+.projects-intro-content h3 {
+  font-size: 1.6em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.project-intro-label {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  font-weight: 300;
+  margin-bottom: 0px;
+  margin-top: 8px;
+}
+
+.project-intro-value {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-top: 0px;
+  margin-bottom: 8px;
+}
+
+.project-intro-list {
+  font-size: 0.85em;
+  font-weight: 600;
+  margin-top: 0px;
+}
+
+.project-intro-list.funding {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.project-intro-description {
+  font-size: 0.85em;
+}
