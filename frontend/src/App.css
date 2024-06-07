@@ -8,12 +8,12 @@ body {
 }
 
 .canvas-container {
-  display: grid
+  display: grid;
 }
 
 .map-container {
   height: 100vh;
-  width: 70vw;
+  width: 67vw;
   cursor: all-scroll !important;
 }
 
@@ -30,11 +30,6 @@ body {
 .callout-container {
   position: relative;
   z-index: 0;
-  /* left: 10px;
-  top: -80px;
-  background-color: red;
-  z-index: 100;
-  width: 100px */
 }
 
 
@@ -47,9 +42,7 @@ body {
   text-justify: inter-word;
   border: 1px solid white;
   cursor: pointer;
-  /* pointer-events: none */
   pointer-events:initial !important
-  /* touch-action: none */
 
 }
 
