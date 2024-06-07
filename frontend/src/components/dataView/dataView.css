@@ -8,10 +8,21 @@
 
 .data-view > .title {
     font-size: 1.4em;
+    margin-top: 16px;
+    font-weight: 600;
+    margin-bottom: -8px;
 }
 
 .block {
     margin-top: 16px;
+}
+
+.block  > .title {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  font-weight: 300;
+  
+  margin-top: 8px;
 }
 
 .data-view > .subtitle {
@@ -22,16 +33,19 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-left: -8px;
-    margin-right: -8px;
     justify-content: flex-start;
 }
 
-.authors > .content > div, .institutions > .content > div, .type > .content > div {
-    margin: 8px;
+.type > .content > div {
+    margin: 0 0 16px 0;
     padding: 4px 16px;
     border-radius: 8px;
-    background-color: Azure;
+    background-color: LightBlue;
+}
+
+.thumbnail {
+    width: 100%;
+    height: auto;
 }
 
 .video {
@@ -56,8 +70,8 @@
 
 .button-link > a {
     display: inline-block;
-    border: 3px solid Azure;
-    background-color: Azure;
+    border: 3px solid LightBlue;
+    background-color: LightBlue;
     border-radius: 8px;
     padding: 8px 32px;
     color: black;
