@@ -13,7 +13,7 @@ import { ProjectsIntroduction } from "./components/projects-introduction/project
 import earthGraphic from "./assets/earth_graphic.png";
 
 const token =
-  "pk.eyJ1IjoiZ2lzbGF3aWxsIiwiYSI6IlExbkx6bzgifQ.LNkIex0qGMqb1hQo3P-8wg";
+  "pk.eyJ1IjoiamtlbmRhbGxiYXIiLCJhIjoiY2x3aXJtdndlMHQ2ODJpbGV2MHZuczJ6ZSJ9.Osr0UL8698r-LhyuBIXSog";
 
 function JSON_Parse(obj) {
   const to_return = Object();
@@ -108,7 +108,7 @@ export default function Map() {
   const { map, mapContainer, mapLoaded } = useMap(
     init_viewport,
     token,
-    "mapbox://styles/gislawill/clx53ie6y01va01rd5i644trh"
+    "mapbox://styles/jkendallbar/clx5ckkz001i601rb6xo7eywz"
   );
 
   const hoveredRef = useRef();
