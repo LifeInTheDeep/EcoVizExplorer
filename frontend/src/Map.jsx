@@ -13,7 +13,7 @@ import { ProjectsIntroduction } from "./components/projects-introduction/project
 import earthGraphic from "./assets/earth_graphic.png";
 
 const token =
-  "pk.eyJ1IjoiY2xvd3JpZSIsImEiOiJja21wMHpnMnIwYzM5Mm90OWFqaTlyejhuIn0.TXE-FIaqF4K_K1OirvD0wQ";
+  "pk.eyJ1IjoiZ2lzbGF3aWxsIiwiYSI6IlExbkx6bzgifQ.LNkIex0qGMqb1hQo3P-8wg";
 
 function JSON_Parse(obj) {
   const to_return = Object();
@@ -64,37 +64,39 @@ function CreateGeojsonFromResponse(data) {
   return data
     .map((d, idx) => {
       try {
-        const to_return = Object();
-        to_return["geometry"] = {
+        const geometry = {
           type: "Point",
           coordinates: [
             Number(d.properties.Longitude.number),
             Number(d.properties.Latitude.number),
           ],
         };
-        const properties = Object.keys(d.properties).map((k) => {
-          const props = Object();
-          let v = multiSelectFix(d.properties[k]);
-          if (["Authors", "Institutions"].includes(k) && !Array.isArray(v))
-            v = [v];
-          props[k] = v;
-          return props;
-        });
-        const result = properties.reduce(
-          (acc, curr) => Object.assign(acc, curr),
-          {}
-        );
-        to_return["properties"] = result;
-        to_return["properties"]["color"] =
-          d.properties.Topic.multi_select[0].color;
-        to_return["type"] = "Feature";
-        to_return["id"] = idx;
-        return to_return;
+
+        const properties = Object.keys(d.properties).reduce((acc, k) => {
+          let value = multiSelectFix(d.properties[k]);
+          if (
+            ["Authors", "Institutions"].includes(k) &&
+            !Array.isArray(value)
+          ) {
+            value = [value];
+          }
+          acc[k] = value;
+          return acc;
+        }, {});
+
+        properties.color = d.properties.Topic.multi_select[0].color;
+
+        return {
+          type: "Feature",
+          id: idx,
+          geometry,
+          properties,
+        };
       } catch {
-        return;
+        return null;
       }
     })
-    .filter((d) => d);
+    .filter((d) => d !== null);
 }
 
 const callout_offsets = {
@@ -106,9 +108,10 @@ export default function Map() {
   const { map, mapContainer, mapLoaded } = useMap(
     init_viewport,
     token,
-    "mapbox://styles/mapbox/satellite-streets-v12"
+    "mapbox://styles/gislawill/clx53ie6y01va01rd5i644trh"
   );
 
+  const hoveredRef = useRef();
   const [features, setFeatures] = useState([]);
   const [data, setData] = useState();
   const [callouts, setCallouts] = useState([]);
@@ -153,9 +156,10 @@ export default function Map() {
         ctx?.clearRect(0, 0, width, height);
         return;
       }
-
       const f1 = data
         ? features.find((f) => f.properties.Title === data.Title)
+        : hoveredRef.current
+        ? features.find((f) => f.id === hoveredRef.current)
         : features.sort(
             (a, b) => a.distance_to_center - b.distance_to_center
           )[0];
@@ -193,11 +197,58 @@ export default function Map() {
           },
           paint: {
             "circle-color": ["get", "color"],
+            "circle-stroke-width": [
+              "case",
+              ["boolean", ["feature-state", "hover"], false],
+              4,
+              1,
+            ],
+            "circle-stroke-color": [
+              "case",
+              ["boolean", ["feature-state", "hover"], false],
+              "rgba(255, 255, 255, 0.5)",
+              "rgba(255, 255, 255, 0.3)",
+            ],
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              1, 5,
+              5, 7,
+              10, 15,
+              20, 20,
+            ],
           },
         });
         map.on("click", "data", (e) =>
           setData(JSON_Parse(e.features[0].properties))
         );
+        map.on("mousemove", "data", (e) => {
+          if (e.features.length === 0) return;
+          map.getCanvas().style.cursor = "pointer";
+          hoveredRef.current = e.features[0].id;
+          map.setFeatureState(
+            { source: "data", id: hoveredRef.current },
+            { hover: true }
+          );
+          if (onMapMoveRef.current) {
+            onMapMoveRef.current();
+          }
+        });
+        map.on("mouseleave", "data", () => {
+          if (hoveredRef.current) {
+            map.setFeatureState(
+              { source: "data", id: hoveredRef.current },
+              { hover: false }
+            );
+          }
+
+          hoveredRef.current = null;
+          map.getCanvas().style.cursor = "";
+          if (onMapMoveRef.current) {
+            onMapMoveRef.current();
+          }
+        });
         map.on("move", () => {
           if (onMapMoveRef.current) {
             onMapMoveRef.current();
@@ -213,11 +264,11 @@ export default function Map() {
     });
     map.on("style.load", () => {
       map.setFog({
-        color: "rgb(186, 210, 235)", // Lower atmosphere
-        "high-color": "rgb(36, 92, 223)", // Upper atmosphere
-        "horizon-blend": 0.01, // Atmosphere thickness (default 0.2 at low zooms)
+        color: "rgba(186, 210, 235, 0.2)", // Lower atmosphere
+        "high-color": "rgba(36, 92, 223, 0.4)", // Upper atmosphere
+        "horizon-blend": 0.005, // Atmosphere thickness (default 0.2 at low zooms)
         "space-color": "rgb(11, 11, 25)", // Background color
-        "star-intensity": 0.6, // Background star brightness (default 0.35 at low zoooms )
+        "star-intensity": 0.35, // Background star brightness (default 0.35 at low zoooms )
       });
     });
   }, [map]);
@@ -330,48 +381,46 @@ export default function Map() {
           Canvas not supported
         </canvas>
         <div ref={mapContainer} className="map-container" />
-        {callouts.map((c) => c.data ? (
-          <div
-            key={c.data.properties.Title}
-            className={"callout-container " + c.loc}
-            ref={c.ref}
-            style={{
-              position: "absolute",
-              left: canvasRef.current.getBoundingClientRect().left,
-              right: canvasRef.current.getBoundingClientRect().right,
-              top: canvasRef.current.getBoundingClientRect().top,
-              bottom: canvasRef.current.getBoundingClientRect().bottom,
-            }}
-          >
+        {callouts.map((c) =>
+          c.data ? (
             <div
-              className="callout"
+              key={c.data.properties.Title}
+              className={"callout-container " + c.loc}
+              ref={c.ref}
               style={{
-                position: "relative",
-                left:
-                  c.data.pos.x +
-                  (c.loc === "bottom_left"
-                    ? -callout_offsets.x - 50
-                    : callout_offsets.x),
-                top:
-                  c.data.pos.y +
-                  (c.loc === "top_right"
-                    ? -callout_offsets.y - 50
-                    : callout_offsets.y),
-                width: 150,
+                position: "absolute",
+                left: canvasRef.current.getBoundingClientRect().left,
+                right: canvasRef.current.getBoundingClientRect().right,
+                top: canvasRef.current.getBoundingClientRect().top,
+                bottom: canvasRef.current.getBoundingClientRect().bottom,
               }}
-              onClick={() => setData(JSON_Parse(c.data.properties))}
             >
-              {c.data.properties.Title}
+              <div
+                className="callout"
+                style={{
+                  position: "relative",
+                  left:
+                    c.data.pos.x +
+                    (c.loc === "bottom_left"
+                      ? -callout_offsets.x - 50
+                      : callout_offsets.x),
+                  top:
+                    c.data.pos.y +
+                    (c.loc === "top_right"
+                      ? -callout_offsets.y - 50
+                      : callout_offsets.y),
+                  width: 150,
+                }}
+                onClick={() => setData(JSON_Parse(c.data.properties))}
+              >
+                {c.data.properties.Title}
+              </div>
             </div>
-          </div>
-        ) : null
-      )}
+          ) : null
+        )}
       </div>
       {data && <DetailDemo url={data.URL} />}
-      <ProjectsIntroduction
-        show={disclaimer}
-        setShow={setDisclaimer}
-      />
+      <ProjectsIntroduction show={disclaimer} setShow={setDisclaimer} />
     </div>
   );
 }

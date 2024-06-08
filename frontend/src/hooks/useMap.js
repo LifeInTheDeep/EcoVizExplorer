@@ -29,6 +29,7 @@ export function useMap(init_viewport, access_token, theme) {
     const _map = new mapboxgl.Map({
       container: mapContainer.current,
       style: theme,
+      projection: "globe", 
       center: [viewport.longitude, viewport.latitude],
       bearing: viewport.bearing,
       pitch: viewport.pitch,
