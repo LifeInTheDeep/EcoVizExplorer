@@ -18,6 +18,20 @@ body {
   cursor: all-scroll !important;
 }
 
+@media (max-width: 768px) {
+  .map-container {
+    width: 100vw;
+  }
+
+  .canvas-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
 .map-container,
 #canvasID {
   grid-area: 1/1
@@ -31,11 +45,6 @@ body {
 .callout-container {
   position: relative;
   z-index: 0;
-  /* left: 10px;
-  top: -80px;
-  background-color: red;
-  z-index: 100;
-  width: 100px */
 }
 
 
@@ -48,10 +57,7 @@ body {
   text-justify: inter-word;
   border: 1px solid white;
   cursor: pointer;
-  /* pointer-events: none */
   pointer-events:initial !important
-  /* touch-action: none */
-
 }
 
 .callout:hover {

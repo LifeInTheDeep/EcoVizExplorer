@@ -16,6 +16,12 @@
     display: flex;
 }
 
+.classyList > .category > .content {
+    position: relative;
+    z-index: 1;
+    background-color: white;
+}
+
 
 .classyList > .category > .header > .icon-container {
     display: flex;

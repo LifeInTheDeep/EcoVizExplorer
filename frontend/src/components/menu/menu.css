@@ -1,6 +1,8 @@
 .header {
+    position: relative;
     background-color: beige;
     width: 100%;
+    z-index: 1;
     padding: 20px 10px;
     cursor: pointer;
     background-color: white;
@@ -64,3 +66,30 @@
     margin-right: 12px;
 }
   
+.menu > .header > .mobile-icon-container {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 30px;
+}
+
+.menu > .header > .mobile-icon-container > svg {
+    width: 36px;
+    height: 36px;
+    color: #545353;
+}
+
+@media (max-width: 768px) {
+    .menu {
+        width: 100vw;
+        transition: transform 0.3s ease-in-out;
+        z-index: 2;
+    }
+
+    .menu.closed {
+        transform: translateX(calc(-100% + 48px));
+    }
+
+    .header > .back-arrow-container > .back-arrow
+}
+
