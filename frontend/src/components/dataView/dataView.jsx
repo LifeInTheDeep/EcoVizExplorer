@@ -1,3 +1,4 @@
+import { listToString } from "../../utilities/text-formatting";
 import "./dataView.css";
 
 export function DetailDemo({ url }) {
@@ -30,26 +31,26 @@ function Block({ className, title, content }) {
 
 export default function DataView({ data, classes = [] }) {
   return (
+    <>
+    <img src={data.Thumbnail} alt={data.Title} className="thumbnail" />
     <div className={"data-view " + classes.join(" ")}>
       <div className="title">{data.Title}</div>
+      <Block
+        className="type"
+        title=""
+        content={
+          <div className="content">
+            <div>{data.Tags}</div>
+          </div>
+        }
+      />
       <div className="subtitle">{data["Short description"]}</div>
       <Block
         className="authors"
         title="Authors"
         content={
           <div className="content">
-            {data.Authors.map((a) => (
-              <div>{a}</div>
-            ))}
-          </div>
-        }
-      />
-      <Block
-        className="type"
-        title="Type"
-        content={
-          <div className="content">
-            <div>{data.Tags}</div>
+            {listToString(data.Authors)}
           </div>
         }
       />
@@ -58,9 +59,7 @@ export default function DataView({ data, classes = [] }) {
         title="Institutions"
         content={
           <div className="content">
-            {data.Institutions.map((i) => (
-              <div>{i}</div>
-            ))}
+            {listToString(data.Institutions)}
           </div>
         }
       />
@@ -89,5 +88,7 @@ export default function DataView({ data, classes = [] }) {
         </div>
       )}
     </div>
+    </>
+    
   );
 }

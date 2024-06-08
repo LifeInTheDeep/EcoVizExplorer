@@ -1,6 +1,6 @@
 import './splashscreen.css'
 import hero from '../../assets/usvi_flooding_lowres.jpg';
-import seal_spiral from '../../assets/02_07_SleepAtSea_Graphic03.png'
+import earthGraphic from '../../assets/earth_graphic.png'
 
 import cccr from '../../assets/cccr.png';
 import ucsd from '../../assets/ucsd.png';
@@ -18,8 +18,8 @@ export default function SplashScreen({ setSplashScreen }) {
         <div className='content-container'>
             <div className='content'>
                 <img
-                    src={seal_spiral}
-                    className='seal-spiral'
+                    src={earthGraphic}
+                    className='site-icon'
                 />
                 <div className='title'>
                     <span className='title1'>ECO</span>

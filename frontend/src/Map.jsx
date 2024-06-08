@@ -10,6 +10,8 @@ import Menu from "./components/menu/menu";
 import DataView, { DetailDemo } from "./components/dataView/dataView";
 import { ProjectsIntroduction } from "./components/projects-introduction/projects-introduction";
 
+import earthGraphic from "./assets/earth_graphic.png";
+
 const token =
   "pk.eyJ1IjoiY2xvd3JpZSIsImEiOiJja21wMHpnMnIwYzM5Mm90OWFqaTlyejhuIn0.TXE-FIaqF4K_K1OirvD0wQ";
 
@@ -241,7 +243,7 @@ export default function Map() {
     }
 
     const bl = callouts.filter((c) => c.loc === "bottom_left")[0];
-
+    if (!bl.data) return;
     drawLine(
       bl.data.pos.x,
       bl.data.pos.y,
@@ -295,9 +297,10 @@ export default function Map() {
   ) : (
     <div className="header" onClick={() => setData()}>
       <div className="title">
+        <img src={earthGraphic} className="site-icon" />
         <span className="title1">ECO</span>
         <span className="title2">VIZ</span>
-        <span className="title3">{" Explorer"}</span>
+        <span className="subtitle">{" Explorer"}</span>
       </div>
     </div>
   );
@@ -327,7 +330,7 @@ export default function Map() {
           Canvas not supported
         </canvas>
         <div ref={mapContainer} className="map-container" />
-        {callouts.map((c) => (
+        {callouts.map((c) => c.data ? (
           <div
             key={c.data.properties.Title}
             className={"callout-container " + c.loc}
@@ -361,7 +364,8 @@ export default function Map() {
               {c.data.properties.Title}
             </div>
           </div>
-        ))}
+        ) : null
+      )}
       </div>
       {data && <DetailDemo url={data.URL} />}
       <ProjectsIntroduction

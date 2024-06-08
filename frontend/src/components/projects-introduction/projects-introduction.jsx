@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import "./projects-introduction.css";
+import earthGraphic from "../../assets/earth_graphic.png";
 
 import FadeInOut from "./fade-in-out";
+import { listToString } from "../../utilities/text-formatting";
 
 const animationDuration = 500;
 
@@ -44,12 +46,6 @@ const addLineBreak = (str) =>
       </>
     );
   });
-
-const listToString = (list) => {
-  const lastElement = list[list.length - 1];
-  const listWithoutLastElement = list.slice(0, -1);
-  return listWithoutLastElement.join(", ") + ", and " + lastElement;
-};
 
 const formatUseCases = (useCases) => {
   return useCases.map((useCase) => ({
@@ -104,11 +100,12 @@ export const ProjectsIntroduction = ({ show, setShow }) => {
           </div>
           <div className="projects-scroll-container">
             <div className="title">
+              <img src={earthGraphic} className="site-icon" />
               <span className="title1">ECO</span>
               <span className="title2">VIZ</span>
               <span className="subtitle">EXPLORER</span>
             </div>
-            
+
             <p>
               Explore three overlapping bodies of work visualizing multifaceted
               environmental data to characterize ecosystem impact and
