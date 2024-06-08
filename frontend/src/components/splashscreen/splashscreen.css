@@ -4,11 +4,10 @@
     right: 0px;
     top: 0px;
     bottom: 0px;
-    z-index: 2;
+    z-index: 100;
     background-color: white;
     display: flex;
 }
-
 
 .splashscreen > .hero {
     position: absolute;

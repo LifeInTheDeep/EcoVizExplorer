@@ -8,6 +8,7 @@ import { init_viewport } from "./data/startup_data";
 import { CategoricalClassyList } from "./components/classyList/classyList";
 import Menu from "./components/menu/menu";
 import DataView, { DetailDemo } from "./components/dataView/dataView";
+import { ProjectsIntroduction } from "./components/projects-introduction/projects-introduction";
 
 const token =
   "pk.eyJ1IjoiY2xvd3JpZSIsImEiOiJja21wMHpnMnIwYzM5Mm90OWFqaTlyejhuIn0.TXE-FIaqF4K_K1OirvD0wQ";
@@ -18,7 +19,9 @@ function JSON_Parse(obj) {
     let v = obj[k];
     try {
       v = JSON.parse(v);
-    } catch {}
+    } catch (e) {
+      console.log(e);
+    }
     to_return[k] = v;
   });
   return to_return;
@@ -92,26 +95,25 @@ function CreateGeojsonFromResponse(data) {
     .filter((d) => d);
 }
 
+const callout_offsets = {
+  x: 20,
+  y: 50,
+};
+
 export default function Map() {
   const { map, mapContainer, mapLoaded } = useMap(
     init_viewport,
     token,
-    "mapbox://styles/mapbox/light-v11"
+    "mapbox://styles/mapbox/satellite-streets-v12"
   );
 
   const [features, setFeatures] = useState([]);
   const [data, setData] = useState();
   const [callouts, setCallouts] = useState([]);
+  const [disclaimer, setDisclaimer] = useState(true);
   const canvasRef = useRef();
-
   const BL_Callout = useRef();
-
   const initialSpinTimeout = useRef();
-
-  const callout_offsets = {
-    x: 20,
-    y: 50,
-  };
   const onMapMoveRef = useRef();
   const getFeatures = useCallback(() => {
     const width = map.getCanvas().clientWidth;
@@ -143,10 +145,10 @@ export default function Map() {
 
       if (features.length < 2) {
         setCallouts([]);
-        const ctx = canvasRef.current.getContext("2d");
+        const ctx = canvasRef.current?.getContext("2d");
         const width = map.getCanvas().clientWidth;
         const height = map.getCanvas().clientHeight;
-        ctx.clearRect(0, 0, width, height);
+        ctx?.clearRect(0, 0, width, height);
         return;
       }
 
@@ -165,11 +167,11 @@ export default function Map() {
       ];
       setCallouts(_callouts);
     };
-  }, [map, data, features]);
+  }, [map, data, features, getFeatures]);
 
   function AddData(map) {
     const URL = `${import.meta.env.VITE_APP_BACKEND_URL}/v1/databases/${
-      import.meta.env.VITE_APP_DATABASE_ID
+      import.meta.env.VITE_APP_PROJECT_DATABASE_ID
     }/query`;
     fetch(URL, { method: "POST" })
       .then((r) => r.json())
@@ -211,7 +213,7 @@ export default function Map() {
       map.setFog({
         color: "rgb(186, 210, 235)", // Lower atmosphere
         "high-color": "rgb(36, 92, 223)", // Upper atmosphere
-        "horizon-blend": 0.02, // Atmosphere thickness (default 0.2 at low zooms)
+        "horizon-blend": 0.01, // Atmosphere thickness (default 0.2 at low zooms)
         "space-color": "rgb(11, 11, 25)", // Background color
         "star-intensity": 0.6, // Background star brightness (default 0.35 at low zoooms )
       });
@@ -246,7 +248,7 @@ export default function Map() {
       bl.data.pos.x - callout_offsets.x,
       bl.data.pos.y + callout_offsets.y
     );
-  }, [callouts]);
+  }, [callouts, map]);
 
   useEffect(() => {
     if (!data) return;
@@ -269,7 +271,7 @@ export default function Map() {
           essential: true,
         });
       }, 5);
-      map.on("mousedown", () => clearInterval(initialSpinTimeout.current));  
+      map.on("mousedown", () => clearInterval(initialSpinTimeout.current));
     }, 500);
   }, [map, mapLoaded, data]);
 
@@ -281,8 +283,7 @@ export default function Map() {
       center: [lng, lat],
       zoom: 2,
     });
-    
-  }, [data]);
+  }, [data, map, mapLoaded]);
 
   const header = data ? (
     <div className="header" onClick={() => setData()}>
@@ -304,25 +305,22 @@ export default function Map() {
   return (
     <div className="screen">
       {
-        <Menu
-          header={header}
-          children={
-            data ? (
-              <DataView data={data} />
-            ) : (
-              <CategoricalClassyList
-                data={features}
-                display_property={(d) => d.properties.Title}
-                category_property={(d) => d.properties.Topic}
-                classes={["video-popup"]}
-                itemClass={(d) => d.properties.Topic.split(" ").join("-")}
-                itemOnClick={(d) => {
-                  setData(d.properties);
-                }}
-              />
-            )
-          }
-        ></Menu>
+        <Menu header={header}>
+          {data ? (
+            <DataView data={data} />
+          ) : (
+            <CategoricalClassyList
+              data={features}
+              display_property={(d) => d.properties.Title}
+              category_property={(d) => d.properties.Topic}
+              classes={["video-popup"]}
+              itemClass={(d) => d.properties.Topic.split(" ").join("-")}
+              itemOnClick={(d) => {
+                setData(d.properties);
+              }}
+            />
+          )}
+        </Menu>
       }
       <div className="canvas-container">
         <canvas id="canvasID" ref={canvasRef}>
@@ -331,6 +329,7 @@ export default function Map() {
         <div ref={mapContainer} className="map-container" />
         {callouts.map((c) => (
           <div
+            key={c.data.properties.Title}
             className={"callout-container " + c.loc}
             ref={c.ref}
             style={{
@@ -365,6 +364,10 @@ export default function Map() {
         ))}
       </div>
       {data && <DetailDemo url={data.URL} />}
+      <ProjectsIntroduction
+        show={disclaimer}
+        setShow={setDisclaimer}
+      />
     </div>
   );
 }
