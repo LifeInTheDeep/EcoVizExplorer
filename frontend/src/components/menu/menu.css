@@ -28,6 +28,7 @@
 
 .menu {
     width: 33vw;
+    min-width: 360px;
     background-color: white;
     color: grey;
     color: black;
@@ -71,6 +72,7 @@
     top: 50%;
     transform: translateY(-50%);
     right: 30px;
+    display: none;
 }
 
 .menu > .header > .mobile-icon-container > svg {
@@ -90,6 +92,8 @@
         transform: translateX(calc(-100% + 48px));
     }
 
-    .header > .back-arrow-container > .back-arrow
+    .menu > .header > .mobile-icon-container {
+        display: block;
+    }
 }
 
