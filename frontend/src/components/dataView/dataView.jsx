@@ -1,8 +1,10 @@
+import { useMemo } from "react";
 import { listToString } from "../../utilities/text-formatting";
 import "./dataView.css";
 
 export function DetailDemo({ url, forMobile = false }) {
-  if (!url.includes("youtu.be"))
+  const adjustedUrl = useMemo(() => url.replace("youtu.be", "youtube.com/embed"), [url]);
+  if (!adjustedUrl.includes("youtube.com/embed"))
     return (
       <div className={forMobile ? "video site mobile" : "video site"}>
         <iframe width="100%" height="100%" src={url}></iframe>
@@ -10,12 +12,7 @@ export function DetailDemo({ url, forMobile = false }) {
     );
   return (
     <div className={forMobile ? "video mobile" : "video"}>
-      <div>
-        <a href={url} target="_blank">
-          Link to Site
-        </a>
-      </div>
-      <iframe width="100%" height="100%" src={url}></iframe>
+      <iframe width="100%" height="100%" src={adjustedUrl}></iframe>
     </div>
   );
 }

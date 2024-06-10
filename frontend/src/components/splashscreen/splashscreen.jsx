@@ -14,6 +14,8 @@ export default function SplashScreen({ setSplashScreen }) {
     <div className="splashscreen">
       <img src={hero} className="hero" />
       <div className="content-container">
+      <div className="gradient-container" />
+
         <div className="content">
           <img src={earthGraphic} className="site-icon" />
           <div className="title">

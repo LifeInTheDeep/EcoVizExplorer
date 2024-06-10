@@ -13,14 +13,23 @@
 
 .splashscreen > .hero {
     position: absolute;
-    right: calc(-800px - 10vw);
-    top: -10vw;
-    width: 160vw;
-    min-width: 1400px;
-    height: 80vw;
-    min-height: 700px;
-    z-index: 0;
+    right: calc(-280px - 10vw);
+    top: -280px;
+    width: 120vw;
+    min-width: 1200px;
+    max-width: 2000px;
+    z-index: 1;
     transform: rotate(25deg);
+}
+
+.gradient-container {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    height: 100%;
+    bottom: 0px;
+    z-index: 0;
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
 }
 
 .splashscreen > .content-container {
@@ -28,10 +37,8 @@
     left: 0px;
     right: 0px;
     top: 10%;
-    bottom: 0px;
     z-index: 4;
     display: flex;
-    background-image: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
 }
 
 .splashscreen > .content-container > .content {
@@ -94,6 +101,7 @@
     justify-content: space-between;
     padding-top: 80px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .splashscreen > .content-container > .content > .logo-footer > img {
@@ -127,7 +135,7 @@
         min-height: 700px;
     }
     .splashscreen > .content-container > .content > .logo-footer > img {
-        width: 35%;
+        width: 40%;
         min-width: 100px;
     }
 
