@@ -17,6 +17,20 @@ body {
   cursor: all-scroll !important;
 }
 
+@media (max-width: 768px) {
+  .map-container {
+    width: 100vw;
+  }
+
+  .canvas-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
 .map-container,
 #canvasID {
   grid-area: 1/1
@@ -43,7 +57,6 @@ body {
   border: 1px solid white;
   cursor: pointer;
   pointer-events:initial !important
-
 }
 
 .callout:hover {

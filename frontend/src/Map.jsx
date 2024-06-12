@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, memo, useMemo } from "react";
+import { Icon } from "@iconify/react";
 
 // Custom Hooks
 import { useMap } from "./hooks/useMap";
@@ -13,7 +14,7 @@ import { ProjectsIntroduction } from "./components/projects-introduction/project
 import earthGraphic from "./assets/earth_graphic.png";
 
 const token =
-  "pk.eyJ1IjoiZ2lzbGF3aWxsIiwiYSI6IlExbkx6bzgifQ.LNkIex0qGMqb1hQo3P-8wg";
+  "pk.eyJ1IjoiamtlbmRhbGxiYXIiLCJhIjoiY2x3aXJtdndlMHQ2ODJpbGV2MHZuczJ6ZSJ9.Osr0UL8698r-LhyuBIXSog";
 
 function JSON_Parse(obj) {
   const to_return = Object();
@@ -108,9 +109,10 @@ export default function Map() {
   const { map, mapContainer, mapLoaded } = useMap(
     init_viewport,
     token,
-    "mapbox://styles/gislawill/clx53ie6y01va01rd5i644trh"
+    "mapbox://styles/jkendallbar/clx5ckkz001i601rb6xo7eywz"
   );
 
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
   const hoveredRef = useRef();
   const [features, setFeatures] = useState([]);
   const [data, setData] = useState();
@@ -213,16 +215,21 @@ export default function Map() {
               "interpolate",
               ["linear"],
               ["zoom"],
-              1, 5,
-              5, 7,
-              10, 15,
-              20, 20,
+              1,
+              5,
+              5,
+              7,
+              10,
+              15,
+              20,
+              20,
             ],
           },
         });
-        map.on("click", "data", (e) =>
-          setData(JSON_Parse(e.features[0].properties))
-        );
+        map.on("click", "data", (e) => {
+          setData(JSON_Parse(e.features[0].properties));
+          setIsMenuOpen(true);
+        });
         map.on("mousemove", "data", (e) => {
           if (e.features.length === 0) return;
           map.getCanvas().style.cursor = "pointer";
@@ -338,12 +345,26 @@ export default function Map() {
     });
   }, [data, map, mapLoaded]);
 
+  const icon = useMemo(() => (
+    <div className="mobile-icon-container" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+      <Icon
+        icon={
+          isMenuOpen
+            ? "material-symbols:map-outline"
+            : "mingcute:arrow-right-line"
+        }
+        className="icon"
+      />
+    </div>
+  ), [isMenuOpen]);
+
   const header = data ? (
     <div className="header" onClick={() => setData()}>
       <div className="back-arrow-container">
         <div className="back-arrow" />
       </div>
       <div className="text">Back To Project List</div>
+      {icon}
     </div>
   ) : (
     <div className="header" onClick={() => setData()}>
@@ -353,13 +374,14 @@ export default function Map() {
         <span className="title2">VIZ</span>
         <span className="subtitle">{" Explorer"}</span>
       </div>
+      {icon}
     </div>
   );
 
   return (
     <div className="screen">
       {
-        <Menu header={header}>
+        <Menu header={header} isOpen={isMenuOpen}>
           {data ? (
             <DataView data={data} />
           ) : (
@@ -374,6 +396,12 @@ export default function Map() {
               }}
             />
           )}
+          <div
+            className="menu-toggle"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <div className="menu-toggle-bar" />
+          </div>
         </Menu>
       }
       <div className="canvas-container">
@@ -411,7 +439,10 @@ export default function Map() {
                       : callout_offsets.y),
                   width: 150,
                 }}
-                onClick={() => setData(JSON_Parse(c.data.properties))}
+                onClick={() => {
+                  setData(JSON_Parse(c.data.properties));
+                  setIsMenuOpen(true);
+                }}
               >
                 {c.data.properties.Title}
               </div>
