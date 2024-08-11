@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import "./classyList.css";
 
 export default function ClassyList({
@@ -10,7 +11,11 @@ export default function ClassyList({
   return (
     <div className={"classyList " + classes.join(" ")}>
       {data.map((d) => (
-        <div className={"item " + itemClass(d)} onClick={() => itemOnClick(d)}>
+        <div
+          className={"item " + itemClass(d)}
+          onClick={() => itemOnClick(d)}
+          key={display_property(d)}
+        >
           {display_property(d)}
         </div>
       ))}
@@ -20,28 +25,32 @@ export default function ClassyList({
 
 export function CategoricalClassyList({
   data,
+  useCases,
   category_property,
   display_property,
   itemOnClick,
   itemClass,
   classes = [],
 }) {
-  const categories = Array.from(
-    new Set([...data.map((d) => category_property(d))])
-  );
-  const categorized_data = categories.map((c) => {
-    const filtered_data = data.filter((d) => category_property(d) === c);
-    return {
-      category: c,
-      icon: filtered_data[0].properties.Logo,
-      data: filtered_data,
-    };
-  });
+  const categorized_data = useMemo(() => {
+    const categories = Array.from(
+      new Set([...data.map((d) => category_property(d))])
+    );
+
+    return categories.map((c) => {
+      const filtered_data = data.filter((d) => category_property(d) === c);
+      return {
+        category: c,
+        icon: useCases.find((u) => u.title.replace(/ |\n/g, "").toLowerCase() === c.replace(/ /g, "").toLowerCase())?.logo,
+        data: filtered_data,
+      };
+    });
+  }, [data, category_property, useCases]);
 
   return (
     <div className={"classyList " + classes.join(" ")}>
       {categorized_data.map((c) => (
-        <div className="category">
+        <div className="category" key={c.category}>
           <div className="header">
             <div className="title">
               <img src={c.icon} alt="" className="category-icon" />
@@ -75,7 +84,7 @@ function ItemPreview({ item, onClick, itemClass, display_property }) {
   return (
     <div className={"item " + itemClass(item)}>
       <p>
-        <div class="chevron"></div>
+        <div className="chevron"></div>
         {display_property(item)}
       </p>
       <div className="item-preview">

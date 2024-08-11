@@ -47,41 +47,14 @@ const addLineBreak = (str) =>
     );
   });
 
-const formatUseCases = (useCases) => {
-  return useCases.map((useCase) => ({
-    affliation:
-      useCase.properties["Project Lead Affiliation"].rich_text[0].plain_text,
-    title: useCase.properties["Project Title"].rich_text[0].plain_text,
-    funding: useCase.properties["Funding"].multi_select.map((s) => s.name),
-    description: useCase.properties["Description"].rich_text[0].plain_text,
-    visualizationTeam: useCase.properties[
-      "Visualization Team"
-    ].multi_select.map((s) => s.name),
-    visualizationProjectLead:
-      useCase.properties["Visualization Project Lead"].title[0].plain_text,
-    logo: useCase.properties["Logo"].files[0].file.url,
-    thumbnail: useCase.properties["Thumbnail"].files[0].file.url,
-  }));
-};
 
-export const ProjectsIntroduction = ({ show, setShow }) => {
+
+export const ProjectsIntroduction = ({ show, setShow, useCases }) => {
   const [showClose, setShowClose] = useState(false);
-  const [useCases, setUseCases] = useState([]);
 
   useEffect(() => {
     if (show) setShowClose(true);
   }, [show]);
-
-  useEffect(() => {
-    const URL = `${import.meta.env.VITE_APP_BACKEND_URL}/v1/databases/${
-      import.meta.env.VITE_APP_USE_CASE_DATABASE_ID
-    }/query`;
-    fetch(URL, { method: "POST" })
-      .then((r) => r.json())
-      .then((r) => {
-        setUseCases(formatUseCases(r.results));
-      });
-  }, []);
 
   return (
     <FadeInOut

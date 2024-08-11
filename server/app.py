@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
-import logging, os
+import os
 import uvicorn
 import requests, json
 
@@ -15,7 +14,8 @@ app.add_middleware(
 )
 
 @app.post('/v1/databases/{database_id}/query')
-def test(database_id: str):
+def fetch_notion_data(database_id: str):
+    """Fetch data from Notion"""
     x = requests.post(
         f"https://api.notion.com/v1/databases/{database_id}/query",
         headers={
@@ -25,4 +25,4 @@ def test(database_id: str):
     return json.loads(x.content)
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8080, reload=True) 
+    uvicorn.run("app:app", host="0.0.0.0", port=8080, reload=True)

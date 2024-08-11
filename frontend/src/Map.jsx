@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback, memo, useMemo } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Icon } from "@iconify/react";
 
 // Custom Hooks
@@ -30,38 +30,38 @@ function JSON_Parse(obj) {
   return to_return;
 }
 
-function CreateGeojsonFromResponse(data) {
-  const getText = (f) => {
-    if (Object.keys(f).includes("plain_text")) {
-      return f.plain_text;
-    }
-    if (Object.keys(f).includes("number")) {
-      return f.number;
-    }
-    if (Object.keys(f).includes("url")) {
-      return f.url;
-    }
-    if (Object.keys(f).includes("file")) {
-      return f.file.url;
-    }
-    if (Object.keys(f).includes("name")) {
-      return f.name;
-    }
-    return f;
-  };
+const getText = (f) => {
+  if (Object.keys(f).includes("plain_text")) {
+    return f.plain_text;
+  }
+  if (Object.keys(f).includes("number")) {
+    return f.number;
+  }
+  if (Object.keys(f).includes("url")) {
+    return f.url;
+  }
+  if (Object.keys(f).includes("file")) {
+    return f.file.url;
+  }
+  if (Object.keys(f).includes("name")) {
+    return f.name;
+  }
+  return f;
+};
 
-  const multiSelectFix = (d) => {
-    const field = Object.keys(d).filter((k) => !["id", "type"].includes(k));
-    if (d[field] === 0) return getText(d[field]);
-    if (!d[field]) return null;
-    if (Array.isArray(d[field])) {
-      const x = d[field].map((i) => getText(i));
-      if (x.length === 1) return x[0];
-      return x;
-    }
-    return getText(d[field]);
-  };
+const multiSelectFix = (d) => {
+  const field = Object.keys(d).filter((k) => !["id", "type"].includes(k));
+  if (d[field] === 0) return getText(d[field]);
+  if (!d[field]) return null;
+  if (Array.isArray(d[field])) {
+    const x = d[field].map((i) => getText(i));
+    if (x.length === 1) return x[0];
+    return x;
+  }
+  return getText(d[field]);
+};
 
+function createGeojsonFromResponse(data) {
   return data
     .map((d, idx) => {
       try {
@@ -100,6 +100,39 @@ function CreateGeojsonFromResponse(data) {
     .filter((d) => d !== null);
 }
 
+const fetchProjectData = async () => {
+  const URL = `${import.meta.env.VITE_APP_BACKEND_URL}/v1/databases/${
+    import.meta.env.VITE_APP_PROJECT_DATABASE_ID
+  }/query`;
+  const r = await fetch(URL, { method: "POST" });
+  return r.json();
+};
+
+const formatUseCases = (useCases) => {
+  return useCases.map((useCase) => ({
+    affliation:
+      useCase.properties["Project Lead Affiliation"].rich_text[0].plain_text,
+    title: useCase.properties["Project Title"].rich_text[0].plain_text,
+    funding: useCase.properties["Funding"].multi_select.map((s) => s.name),
+    description: useCase.properties["Description"].rich_text[0].plain_text,
+    visualizationTeam: useCase.properties[
+      "Visualization Team"
+    ].multi_select.map((s) => s.name),
+    visualizationProjectLead:
+      useCase.properties["Visualization Project Lead"].title[0].plain_text,
+    logo: useCase.properties["Logo"].files[0].file.url,
+    thumbnail: useCase.properties["Thumbnail"].files[0].file.url,
+  }));
+};
+
+const getUseCases = async () => {
+  const URL = `${import.meta.env.VITE_APP_BACKEND_URL}/v1/databases/${
+    import.meta.env.VITE_APP_USE_CASE_DATABASE_ID
+  }/query`;
+  const r = await fetch(URL, { method: "POST" });
+  return formatUseCases((await r.json()).results);
+};
+
 const callout_offsets = {
   x: 20,
   y: 50,
@@ -111,7 +144,7 @@ export default function Map() {
     token,
     "mapbox://styles/jkendallbar/clx5ckkz001i601rb6xo7eywz"
   );
-
+  const [useCases, setUseCases] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const hoveredRef = useRef();
   const [features, setFeatures] = useState([]);
@@ -122,6 +155,11 @@ export default function Map() {
   const BL_Callout = useRef();
   const initialSpinTimeout = useRef();
   const onMapMoveRef = useRef();
+
+  useEffect(() => {
+    getUseCases().then((r) => setUseCases(r));
+  }, []);
+
   const getFeatures = useCallback(() => {
     const width = map.getCanvas().clientWidth;
     const height = map.getCanvas().clientHeight;
@@ -177,97 +215,94 @@ export default function Map() {
     };
   }, [map, data, features, getFeatures]);
 
-  function AddData(map) {
-    const URL = `${import.meta.env.VITE_APP_BACKEND_URL}/v1/databases/${
-      import.meta.env.VITE_APP_PROJECT_DATABASE_ID
-    }/query`;
-    fetch(URL, { method: "POST" })
-      .then((r) => r.json())
-      .then((r) => {
-        const features = CreateGeojsonFromResponse(r.results);
-        const geojson = {
-          type: "FeatureCollection",
-          features: features,
-        };
-        setFeatures(features);
-        map.addLayer({
-          id: "data",
-          type: "circle",
-          source: {
-            type: "geojson",
-            data: geojson,
+  const addData = useCallback(
+    async (map) => {
+      const projectData = await fetchProjectData();
+      const features = createGeojsonFromResponse(projectData.results);
+      setFeatures(features);
+
+      map.addLayer({
+        id: "data",
+        type: "circle",
+        source: {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: features,
           },
-          paint: {
-            "circle-color": ["get", "color"],
-            "circle-stroke-width": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              4,
-              1,
-            ],
-            "circle-stroke-color": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              "rgba(255, 255, 255, 0.5)",
-              "rgba(255, 255, 255, 0.3)",
-            ],
-            "circle-radius": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              1,
-              5,
-              5,
-              7,
-              10,
-              15,
-              20,
-              20,
-            ],
-          },
-        });
-        map.on("click", "data", (e) => {
-          setData(JSON_Parse(e.features[0].properties));
-          setIsMenuOpen(true);
-        });
-        map.on("mousemove", "data", (e) => {
-          if (e.features.length === 0) return;
-          map.getCanvas().style.cursor = "pointer";
-          hoveredRef.current = e.features[0].id;
+        },
+        paint: {
+          "circle-color": ["get", "color"],
+          "circle-stroke-width": [
+            "case",
+            ["boolean", ["feature-state", "hover"], false],
+            4,
+            1,
+          ],
+          "circle-stroke-color": [
+            "case",
+            ["boolean", ["feature-state", "hover"], false],
+            "rgba(255, 255, 255, 0.5)",
+            "rgba(255, 255, 255, 0.3)",
+          ],
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            1,
+            5,
+            5,
+            7,
+            10,
+            15,
+            20,
+            20,
+          ],
+        },
+      });
+      map.on("click", "data", (e) => {
+        setData(JSON_Parse(e.features[0].properties));
+        setIsMenuOpen(true);
+      });
+      map.on("mousemove", "data", (e) => {
+        if (e.features.length === 0) return;
+        map.getCanvas().style.cursor = "pointer";
+        hoveredRef.current = e.features[0].id;
+        map.setFeatureState(
+          { source: "data", id: hoveredRef.current },
+          { hover: true }
+        );
+        if (onMapMoveRef.current) {
+          onMapMoveRef.current();
+        }
+      });
+      map.on("mouseleave", "data", () => {
+        if (hoveredRef.current) {
           map.setFeatureState(
             { source: "data", id: hoveredRef.current },
-            { hover: true }
+            { hover: false }
           );
-          if (onMapMoveRef.current) {
-            onMapMoveRef.current();
-          }
-        });
-        map.on("mouseleave", "data", () => {
-          if (hoveredRef.current) {
-            map.setFeatureState(
-              { source: "data", id: hoveredRef.current },
-              { hover: false }
-            );
-          }
+        }
 
-          hoveredRef.current = null;
-          map.getCanvas().style.cursor = "";
-          if (onMapMoveRef.current) {
-            onMapMoveRef.current();
-          }
-        });
-        map.on("move", () => {
-          if (onMapMoveRef.current) {
-            onMapMoveRef.current();
-          }
-        });
+        hoveredRef.current = null;
+        map.getCanvas().style.cursor = "";
+        if (onMapMoveRef.current) {
+          onMapMoveRef.current();
+        }
       });
-  }
+      map.on("move", () => {
+        if (onMapMoveRef.current) {
+          onMapMoveRef.current();
+        }
+      });
+    },
+    [setFeatures, setData, setIsMenuOpen, hoveredRef, onMapMoveRef]
+  );
 
   useEffect(() => {
     if (!map) return;
     map.on("load", () => {
-      AddData(map);
+      addData(map);
     });
     map.on("style.load", () => {
       map.setFog({
@@ -278,7 +313,7 @@ export default function Map() {
         "star-intensity": 0.35, // Background star brightness (default 0.35 at low zoooms )
       });
     });
-  }, [map]);
+  }, [map, addData]);
 
   useEffect(() => {
     if (callouts.length === 0) return;
@@ -345,18 +380,24 @@ export default function Map() {
     });
   }, [data, map, mapLoaded]);
 
-  const icon = useMemo(() => (
-    <div className="mobile-icon-container" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-      <Icon
-        icon={
-          isMenuOpen
-            ? "material-symbols:map-outline"
-            : "mingcute:arrow-right-line"
-        }
-        className="icon"
-      />
-    </div>
-  ), [isMenuOpen]);
+  const icon = useMemo(
+    () => (
+      <div
+        className="mobile-icon-container"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        <Icon
+          icon={
+            isMenuOpen
+              ? "material-symbols:map-outline"
+              : "mingcute:arrow-right-line"
+          }
+          className="icon"
+        />
+      </div>
+    ),
+    [isMenuOpen]
+  );
 
   const header = data ? (
     <div className="header" onClick={() => setData()}>
@@ -378,32 +419,35 @@ export default function Map() {
     </div>
   );
 
+  const itemClass = useCallback(
+    (d) => d.properties.Topic.split(" ").join("-"),
+    []
+  );
+
+  const itemOnClick = useCallback((d) => {
+    setData(d.properties);
+  }, []);
+
   return (
     <div className="screen">
-      {
-        <Menu header={header} isOpen={isMenuOpen}>
-          {data ? (
-            <DataView data={data} />
-          ) : (
-            <CategoricalClassyList
-              data={features}
-              display_property={(d) => d.properties.Title}
-              category_property={(d) => d.properties.Topic}
-              classes={["video-popup"]}
-              itemClass={(d) => d.properties.Topic.split(" ").join("-")}
-              itemOnClick={(d) => {
-                setData(d.properties);
-              }}
-            />
-          )}
-          <div
-            className="menu-toggle"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <div className="menu-toggle-bar" />
-          </div>
-        </Menu>
-      }
+      <Menu header={header} isOpen={isMenuOpen}>
+        {data ? (
+          <DataView data={data} />
+        ) : (
+          <CategoricalClassyList
+            data={features}
+            useCases={useCases}
+            display_property={(d) => d.properties.Title}
+            category_property={(d) => d.properties.Topic}
+            classes={["video-popup"]}
+            itemClass={itemClass}
+            itemOnClick={itemOnClick}
+          />
+        )}
+        <div className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <div className="menu-toggle-bar" />
+        </div>
+      </Menu>
       <div className="canvas-container">
         <canvas id="canvasID" ref={canvasRef}>
           Canvas not supported
@@ -451,7 +495,11 @@ export default function Map() {
         )}
       </div>
       {data && <DetailDemo url={data.URL} />}
-      <ProjectsIntroduction show={disclaimer} setShow={setDisclaimer} />
+      <ProjectsIntroduction
+        show={disclaimer}
+        setShow={setDisclaimer}
+        useCases={useCases}
+      />
     </div>
   );
 }
